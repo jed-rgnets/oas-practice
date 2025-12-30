@@ -1,0 +1,115 @@
+id: parameters-query-001
+title: "Query Parameters"
+description: "Add query parameters for filtering and pagination"
+topics:
+  - paths
+  - parameters-query
+  - operations
+difficulty: beginner
+estimated_minutes: 10
+points: 15
+
+instructions: |
+  ## Objective
+
+  Create an OpenAPI 3.0 specification that defines query parameters for
+  filtering and pagination on a list endpoint.
+
+  ## Requirements
+
+  Your API specification must:
+
+  1. Define a `GET` operation at `/users`
+  2. Add a `limit` query parameter (integer type)
+  3. Add an `offset` query parameter (integer type)
+  4. Query parameters should NOT be required
+  5. Return a `200` response
+
+  ## Tips
+
+  - Query parameters use `in: query`
+  - Query parameters are typically optional (required: false or omitted)
+  - Use schema.type to specify the data type
+
+requirements:
+  - id: req-1
+    description: "Define GET operation at /users"
+    hint: "Add paths./users.get"
+    points: 3
+  - id: req-2
+    description: "Add limit query parameter"
+    hint: "Add parameter with name: limit, in: query"
+    points: 4
+  - id: req-3
+    description: "Add offset query parameter"
+    hint: "Add parameter with name: offset, in: query"
+    points: 4
+  - id: req-4
+    description: "Parameters should be integers"
+    hint: "Use schema.type: integer for both parameters"
+    points: 2
+  - id: req-5
+    description: "Return a 200 response"
+    hint: "Add responses.200 with description"
+    points: 2
+
+validation_rules:
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get.parameters[?(@.name=='limit' && @.in=='query')]"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get.parameters[?(@.name=='offset' && @.in=='query')]"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get.parameters[?(@.name=='limit')].schema.type"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get.responses['200']"
+
+starter_code: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users:
+      get:
+        summary: List users
+        # Add query parameters here
+        responses:
+          '200':
+            description: List of users
+
+example_solution: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users:
+      get:
+        summary: List users
+        parameters:
+          - name: limit
+            in: query
+            required: false
+            schema:
+              type: integer
+            description: Maximum number of users to return
+          - name: offset
+            in: query
+            required: false
+            schema:
+              type: integer
+            description: Number of users to skip
+        responses:
+          '200':
+            description: List of users
+            content:
+              application/json:
+                schema:
+                  type: array

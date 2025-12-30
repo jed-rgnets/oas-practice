@@ -1,0 +1,156 @@
+id: components-ref-001
+title: "Reusable Components with $ref"
+description: "Define reusable schemas in components and reference them"
+topics:
+  - components
+  - references
+  - schemas
+difficulty: intermediate
+estimated_minutes: 12
+points: 20
+
+instructions: |
+  ## Objective
+
+  Create an OpenAPI 3.0 specification that uses the components section to
+  define reusable schemas and references them using `$ref`.
+
+  ## Requirements
+
+  Your API specification must:
+
+  1. Define a `User` schema in `components/schemas`
+  2. The User schema should have `id` (integer) and `name` (string) properties
+  3. Define a GET /users endpoint that returns an array of users
+  4. Use `$ref` to reference the User schema in the response
+  5. Define a GET /users/{id} endpoint that returns a single User using `$ref`
+
+  ## Tips
+
+  - Components are defined under `components.schemas`
+  - Reference syntax: `$ref: '#/components/schemas/User'`
+  - For arrays, use `type: array` with `items` containing the `$ref`
+
+requirements:
+  - id: req-1
+    description: "Define User schema in components"
+    hint: "Add components.schemas.User"
+    points: 4
+  - id: req-2
+    description: "User has id (integer) and name (string)"
+    hint: "Add properties with correct types"
+    points: 4
+  - id: req-3
+    description: "GET /users returns array using $ref"
+    hint: "Use items.$ref to reference User schema"
+    points: 4
+  - id: req-4
+    description: "GET /users/{id} uses $ref to User"
+    hint: "Use $ref directly in schema for single object"
+    points: 4
+  - id: req-5
+    description: "Both endpoints have 200 responses"
+    hint: "Add responses.200 to both endpoints"
+    points: 4
+
+validation_rules:
+  - type: json_path_exists
+    config:
+      path: "$.components.schemas.User"
+  - type: json_path_equals
+    config:
+      path: "$.components.schemas.User.properties.id.type"
+      value: "integer"
+  - type: json_path_equals
+    config:
+      path: "$.components.schemas.User.properties.name.type"
+      value: "string"
+  - type: custom
+    config:
+      validator: uses_component_ref
+      args:
+        component_type: "schemas"
+        component_name: "User"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users/{id}'].get.responses['200']"
+
+starter_code: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users:
+      get:
+        summary: List all users
+        responses:
+          '200':
+            description: List of users
+            content:
+              application/json:
+                schema:
+                  # Reference the User schema as an array
+    /users/{id}:
+      get:
+        summary: Get user by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Single user
+            content:
+              application/json:
+                schema:
+                  # Reference the User schema
+  components:
+    schemas:
+      # Define your User schema here
+
+example_solution: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users:
+      get:
+        summary: List all users
+        responses:
+          '200':
+            description: List of users
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/User'
+    /users/{id}:
+      get:
+        summary: Get user by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Single user
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/User'
+  components:
+    schemas:
+      User:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string

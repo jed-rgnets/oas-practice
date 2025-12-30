@@ -1,0 +1,9 @@
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+pyyaml>=6.0.1
+ruamel.yaml>=0.18.0
+openapi-spec-validator>=0.7.1
+jsonschema>=4.21.0
+jsonpath-ng>=1.6.0

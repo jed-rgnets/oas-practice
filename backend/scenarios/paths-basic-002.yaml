@@ -1,0 +1,106 @@
+id: paths-basic-002
+title: "Create a POST Endpoint"
+description: "Define a POST endpoint for creating a new resource with request body"
+topics:
+  - paths
+  - operations
+  - request-bodies
+  - responses
+difficulty: beginner
+estimated_minutes: 8
+points: 15
+
+instructions: |
+  ## Objective
+
+  Create an OpenAPI 3.0 specification that defines a POST endpoint for creating
+  a new user resource.
+
+  ## Requirements
+
+  Your API specification must:
+
+  1. Define a `POST` operation at the `/users` path
+  2. Include a request body with `application/json` content type
+  3. Mark the request body as required
+  4. Return a `201` response for successful creation
+  5. Include a description for the 201 response
+
+  ## Tips
+
+  - POST operations typically include a `requestBody` object
+  - Use `required: true` on the requestBody to make it mandatory
+  - Status code 201 is standard for successful resource creation
+
+requirements:
+  - id: req-1
+    description: "Define a POST operation at /users"
+    hint: "Add a post property under paths./users"
+    points: 3
+  - id: req-2
+    description: "Include a request body"
+    hint: "Add requestBody object to the POST operation"
+    points: 3
+  - id: req-3
+    description: "Use application/json content type in request body"
+    hint: "Add content.application/json under requestBody"
+    points: 3
+  - id: req-4
+    description: "Mark request body as required"
+    hint: "Add required: true to the requestBody"
+    points: 3
+  - id: req-5
+    description: "Return a 201 response with description"
+    hint: "Add responses.201 with a description field"
+    points: 3
+
+validation_rules:
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].post"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].post.requestBody"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].post.requestBody.content['application/json']"
+  - type: json_path_equals
+    config:
+      path: "$.paths['/users'].post.requestBody.required"
+      value: true
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].post.responses['201'].description"
+
+starter_code: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users:
+      # Define your POST endpoint here
+
+example_solution: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users:
+      post:
+        summary: Create a new user
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+        responses:
+          '201':
+            description: User created successfully

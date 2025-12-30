@@ -1,0 +1,131 @@
+id: schemas-object-001
+title: "Define Object Schema"
+description: "Create a schema for a user object with properties"
+topics:
+  - schemas
+  - responses
+  - media-types
+difficulty: beginner
+estimated_minutes: 10
+points: 20
+
+instructions: |
+  ## Objective
+
+  Create an OpenAPI 3.0 specification that defines a complete schema for a
+  User object with specific properties.
+
+  ## Requirements
+
+  Your API specification must define a GET /users/{id} endpoint that returns:
+
+  1. A 200 response with application/json content
+  2. A schema of type `object`
+  3. Properties: `id` (integer), `name` (string), `email` (string)
+  4. Mark `id` and `email` as required properties
+
+  ## Tips
+
+  - Schemas define the structure of request/response bodies
+  - Use `type: object` for object schemas
+  - Define `properties` as a map of property names to schemas
+  - Use the `required` array to list required property names
+
+requirements:
+  - id: req-1
+    description: "Define GET /users/{id} with 200 response"
+    hint: "Create the endpoint with responses.200"
+    points: 4
+  - id: req-2
+    description: "Schema type is object"
+    hint: "Add type: object to the response schema"
+    points: 4
+  - id: req-3
+    description: "Has id property of type integer"
+    hint: "Add properties.id with type: integer"
+    points: 4
+  - id: req-4
+    description: "Has name and email properties of type string"
+    hint: "Add properties.name and properties.email"
+    points: 4
+  - id: req-5
+    description: "Mark id and email as required"
+    hint: "Add required array with 'id' and 'email'"
+    points: 4
+
+validation_rules:
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users/{id}'].get.responses['200'].content['application/json']"
+  - type: json_path_equals
+    config:
+      path: "$.paths['/users/{id}'].get.responses['200'].content['application/json'].schema.type"
+      value: "object"
+  - type: json_path_equals
+    config:
+      path: "$.paths['/users/{id}'].get.responses['200'].content['application/json'].schema.properties.id.type"
+      value: "integer"
+  - type: json_path_contains
+    config:
+      path: "$.paths['/users/{id}'].get.responses['200'].content['application/json'].schema.properties"
+      values: ["name", "email"]
+  - type: json_path_contains
+    config:
+      path: "$.paths['/users/{id}'].get.responses['200'].content['application/json'].schema.required"
+      values: ["id", "email"]
+
+starter_code: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users/{id}:
+      get:
+        summary: Get user by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: User found
+            content:
+              application/json:
+                schema:
+                  # Define your User object schema here
+
+example_solution: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users/{id}:
+      get:
+        summary: Get user by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: User found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  required:
+                    - id
+                    - email
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    email:
+                      type: string

@@ -1,0 +1,108 @@
+id: parameters-path-001
+title: "Path Parameters"
+description: "Define a path parameter to retrieve a specific resource by ID"
+topics:
+  - paths
+  - parameters-path
+  - operations
+  - responses
+difficulty: beginner
+estimated_minutes: 8
+points: 15
+
+instructions: |
+  ## Objective
+
+  Create an OpenAPI 3.0 specification that defines an endpoint with a path
+  parameter to retrieve a specific user by their ID.
+
+  ## Requirements
+
+  Your API specification must:
+
+  1. Define a `GET` operation at `/users/{userId}`
+  2. Define the `userId` path parameter
+  3. Set the parameter location to `path`
+  4. Mark the parameter as required (path parameters must be required)
+  5. Return a `200` response
+
+  ## Tips
+
+  - Path parameters are enclosed in curly braces in the path: `/users/{userId}`
+  - Parameters can be defined at the path level or operation level
+  - Path parameters must always have `required: true`
+  - Common parameter properties: name, in, required, schema, description
+
+requirements:
+  - id: req-1
+    description: "Define GET operation at /users/{userId}"
+    hint: "Use /users/{userId} as the path key"
+    points: 3
+  - id: req-2
+    description: "Define userId parameter"
+    hint: "Add parameters array with name: userId"
+    points: 3
+  - id: req-3
+    description: "Set parameter location to path"
+    hint: "Use in: path for the parameter"
+    points: 3
+  - id: req-4
+    description: "Mark parameter as required"
+    hint: "Add required: true to the parameter"
+    points: 3
+  - id: req-5
+    description: "Return a 200 response"
+    hint: "Add responses.200 with description"
+    points: 3
+
+validation_rules:
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users/{userId}'].get"
+  - type: custom
+    config:
+      validator: has_path_parameter
+      args:
+        path: "/users/{userId}"
+        param_name: "userId"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users/{userId}'].get.parameters[?(@.in=='path')]"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users/{userId}'].get.parameters[?(@.required==true)]"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users/{userId}'].get.responses['200']"
+
+starter_code: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    # Define your /users/{userId} endpoint here
+
+example_solution: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users/{userId}:
+      get:
+        summary: Get user by ID
+        parameters:
+          - name: userId
+            in: path
+            required: true
+            description: The user ID
+            schema:
+              type: string
+        responses:
+          '200':
+            description: User found
+            content:
+              application/json:
+                schema:
+                  type: object

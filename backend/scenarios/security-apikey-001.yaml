@@ -1,0 +1,121 @@
+id: security-apikey-001
+title: "API Key Security Scheme"
+description: "Implement API key authentication using security schemes"
+topics:
+  - security
+  - components
+difficulty: intermediate
+estimated_minutes: 10
+points: 20
+
+instructions: |
+  ## Objective
+
+  Create an OpenAPI 3.0 specification that defines and applies an API key
+  security scheme.
+
+  ## Requirements
+
+  Your API specification must:
+
+  1. Define a security scheme named `apiKey` in components
+  2. Set the type to `apiKey`
+  3. Set the location to `header`
+  4. Set the name to `X-API-Key`
+  5. Apply the security scheme globally
+
+  ## Tips
+
+  - Security schemes are defined in `components.securitySchemes`
+  - API key type requires: `type`, `in`, and `name` fields
+  - `in` can be `header`, `query`, or `cookie`
+  - Global security is applied at the root level with `security` array
+
+requirements:
+  - id: req-1
+    description: "Define apiKey security scheme"
+    hint: "Add components.securitySchemes.apiKey"
+    points: 4
+  - id: req-2
+    description: "Set type to apiKey"
+    hint: "Use type: apiKey"
+    points: 4
+  - id: req-3
+    description: "Set location to header"
+    hint: "Use in: header"
+    points: 4
+  - id: req-4
+    description: "Set name to X-API-Key"
+    hint: "Use name: X-API-Key"
+    points: 4
+  - id: req-5
+    description: "Apply security globally"
+    hint: "Add security array at root level"
+    points: 4
+
+validation_rules:
+  - type: json_path_exists
+    config:
+      path: "$.components.securitySchemes.apiKey"
+  - type: json_path_equals
+    config:
+      path: "$.components.securitySchemes.apiKey.type"
+      value: "apiKey"
+  - type: json_path_equals
+    config:
+      path: "$.components.securitySchemes.apiKey.in"
+      value: "header"
+  - type: json_path_equals
+    config:
+      path: "$.components.securitySchemes.apiKey.name"
+      value: "X-API-Key"
+  - type: custom
+    config:
+      validator: security_scheme_applied
+      args:
+        scheme_name: "apiKey"
+        scope: "global"
+
+starter_code: |
+  openapi: "3.0.3"
+  info:
+    title: Secure API
+    version: "1.0.0"
+
+  # Apply security globally here
+
+  paths:
+    /data:
+      get:
+        summary: Get protected data
+        responses:
+          '200':
+            description: Protected data
+
+  components:
+    securitySchemes:
+      # Define your API key security scheme here
+
+example_solution: |
+  openapi: "3.0.3"
+  info:
+    title: Secure API
+    version: "1.0.0"
+
+  security:
+    - apiKey: []
+
+  paths:
+    /data:
+      get:
+        summary: Get protected data
+        responses:
+          '200':
+            description: Protected data
+
+  components:
+    securitySchemes:
+      apiKey:
+        type: apiKey
+        in: header
+        name: X-API-Key

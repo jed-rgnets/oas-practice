@@ -1,0 +1,91 @@
+id: paths-basic-001
+title: "Define a Simple GET Endpoint"
+description: "Create a basic GET endpoint for retrieving a list of users"
+topics:
+  - paths
+  - operations
+  - responses
+difficulty: beginner
+estimated_minutes: 5
+points: 10
+
+instructions: |
+  ## Objective
+
+  Create an OpenAPI 3.0 specification that defines a simple REST API endpoint
+  for retrieving a list of users.
+
+  ## Requirements
+
+  Your API specification must:
+
+  1. Define a `GET` operation at the `/users` path
+  2. Return a `200` response for successful requests
+  3. Specify `application/json` as the response content type
+  4. Include a response description
+
+  ## Tips
+
+  - The `paths` object maps URL paths to path items
+  - Each path item can contain operations (get, post, put, delete, etc.)
+  - Responses are keyed by HTTP status code (as strings)
+  - The `content` object maps media types to their schemas
+
+requirements:
+  - id: req-1
+    description: "Define a GET operation at /users"
+    hint: "Use the paths object with /users as a key, then add a get property"
+    points: 3
+  - id: req-2
+    description: "Return a 200 response"
+    hint: "Add a responses object under the get operation with '200' as a key"
+    points: 3
+  - id: req-3
+    description: "Use application/json content type"
+    hint: "Add content.application/json under the 200 response"
+    points: 2
+  - id: req-4
+    description: "Include a response description"
+    hint: "The description field is required for Response Objects"
+    points: 2
+
+validation_rules:
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get.responses['200']"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get.responses['200'].content['application/json']"
+  - type: json_path_exists
+    config:
+      path: "$.paths['/users'].get.responses['200'].description"
+
+starter_code: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    # Define your /users endpoint here
+
+example_solution: |
+  openapi: "3.0.3"
+  info:
+    title: User API
+    version: "1.0.0"
+  paths:
+    /users:
+      get:
+        summary: Get all users
+        responses:
+          '200':
+            description: A list of users
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
